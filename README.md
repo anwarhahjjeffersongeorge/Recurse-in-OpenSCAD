@@ -8,4 +8,4 @@ This project contains some basic codes by which certain recursive operations may
 
 1. Generate fibonnaci numbers,
 2. Generate highly degenerate pseudospirals using said fibonnaci numbers, and 
-3. Manipulate one-dimensional vectors and vectors containing vector elements.
+3. Manipulate one-dimensional vectors and vectors containing vector elements (flip backwards, multiply a dimension by a scalar, etc.)
