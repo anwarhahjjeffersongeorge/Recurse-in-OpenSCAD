@@ -4,8 +4,9 @@
 
 This project contains some basic codes by which certain recursive operations may be performed within the [OpenSCAD parametric modeling language](https://github.com/openscad/openscad).
 
-##### The initial version includes functionality like being able to:
+##### This version includes functionality like being able to:
 
 1. Generate fibonnaci numbers,
 2. Generate highly degenerate pseudospirals using said fibonnaci numbers, and 
 3. Manipulate one-dimensional vectors and vectors containing vector elements (flip backwards, multiply a dimension by a scalar, etc.)
+4. Generate arithmetic progressions and geometric progressions in vector form.
