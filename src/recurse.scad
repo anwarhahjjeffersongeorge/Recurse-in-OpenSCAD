@@ -11,7 +11,8 @@
 
    By using these codes selectively and storing their values in arrays, recursion calls may be held to a minimum,
    but know that all employ some form of recursion, with calls generally increasing in direct proportion to the
-   number of elements in the array parameters passed to the functions.
+   number of elements in the array parameters passed to the functions, or in the case of codes in the vector
+   creation section the size of the desired vector. 
 
    Some codes have default parameters. Be careful when tweaking these because it can change the recursive behavior,
    but please have fun experimenting.
@@ -48,8 +49,11 @@
 // Vector Creation 20150222
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150222 Given a scalar 's' and a scalar 'n', create a new unidimensional vector 'v'
-//such that v[m] is congruent to s for any 0 < m < n and undefined for all others
+/*
+20150222 Given a scalar 's' and a scalar 'n',
+create a new unidimensional vector 'v' such that:
+v[m] is congruent to s for any 0 < m < n and undefined for all others
+*/
 function dummy(s, n, v=[], index=0) = (index < n) ? dummy(s,n,concat(v, s), index+1)
                                                   : v;
 
@@ -61,7 +65,10 @@ echo(str("dummy(1.618, 5): ", dummy(1.618, 5))); //20150222 ECHO: "dummy(1.618, 
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150222 Given an example vector 'v' in one dimension, and a scalar 'n', create a new vector 'w' whoes elements are all congruent to v
+/*
+20150222 Given an example vector 'v' in one dimension, and a scalar 'n',
+create a new vector 'w' whoes elements are all congruent to v
+*/
 function fill(v, n, w=[], index=0) = (index<n) ? fill(v, n, concat(w, [v]), index+1)
                                                : w;
 /*
@@ -70,6 +77,45 @@ testfillvec = [0,1,2,3,4,5];
 echo(str("testfillvec: ", testfillvec, ", fill(testfillvec, 4):", fill(testfillvec, 4) )); //20150522 ECHO: "testfillvec: [0, 1, 2, 3, 4, 5], fill(testfillvec, 4):[[0, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5], [0, 1, 2, 3, 4, 5]]"
 */
 
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+/*
+20150314 Given a scalar 's', a scalar 'i', and a scalar 'n'
+ return a unidimensional arithmetic progression, 'v' with n items such that:
+
+ v[m] = s + (i*m) for all  m < n
+
+ the default values of s, i, n are just there for ease of use,
+
+this is pretty much what you might do with a for loop such as for(i = [0:n]),
+but it just reveals a vector should you require one
+*/
+function arithmetic(s=0, i=-1, n=8, v=[], index=0) = (index<n) ? arithmetic(s,i,n, concat(v, s + (i*index)), index+1)
+                                                               : v;
+
+/*
+//USAGE EXAMPLE 20150314
+echo(str("arithmetic() ->  ", arithmetic())); //20150314 ECHO: "arithmetic() ->  [0, -1, -2, -3, -4, -5, -6, -7]"
+echo(str("arithmetic(10.5, 1.8, 6) ->  ", arithmetic(10.5, 1.8, 6))); //20150314 ECHO: "arithmetic(10.5, 1.8, 6) ->[10.5, 12.3, 14.1, 15.9, 17.7, 19.5]"
+*/
+
+
+///////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+/*
+  20150314 Given a scalar 's', a scalar 'i', and a scalar 'n'
+  return a unidimensional geometric progression, 'v' with n items such that:
+   v[m] = s*i^n for all m < n
+*/
+function geometric(s=1, i=2, n=8, v=[], index=0) = (index<n) ? geometric(s, i, n, concat(v, s*pow(i,index)), index+1)
+                                                             : v;
+
+/*
+//USAGE EXAMPLES 20150314
+echo(str("geometric() ->  ", geometric())); //20150314 ECHO: "geometric() ->  [1, 2, 4, 8, 16, 32, 64, 128]"
+echo(str("geometric(1, .5) -> ", geometric(1,.5))); //20150314 ECHO: "geometric(1, .5) -> [1, 0.5, 0.25, 0.125, 0.0625, 0.03125, 0.015625, 0.0078125]"
+echo(str("geometric(1, 1.618, 5) ->  ", geometric(1, 1.618, 5))); //20150314 ECHO: "geometric(1, 1.618, 5) ->  [1, 1.618, 2.61792, 4.2358, 6.85353]"
+*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,7 +123,10 @@ echo(str("testfillvec: ", testfillvec, ", fill(testfillvec, 4):", fill(testfillv
 // Vector Manipulation 20150210
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150222 Given two unidimensional vectors, 'v0' and 'v1', create 'w' in one dimension corresponding to [ [v0_0, v1_0], [v0_1, v1_1],  [v0_2, v1_2] ]
+/*
+20150222 Given two unidimensional vectors, 'v0' and 'v1',
+create 'w' in one dimension corresponding to [ [v0_0, v1_0], [v0_1, v1_1],  [v0_2, v1_2] ]
+*/
 function points_from_vecs(v0, v1, ww=[], index=0) = (index<len(v0)) ? points_from_vecs(v0,v1, concat(ww, [[v0[index],v1[index]]]), index+1)
                                                                     : ww;
 
@@ -91,12 +140,13 @@ echo(str("testv0: ", testv0, ", testv1: ", testv1, ", points_from_vecs(testv0, t
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150213 Given vector 'vv' in 1 dimensions whose elements are vectors,
-//               scalar 's' and
-//               dimension target 'dim',
-//               return new vvector = [ [ vv0[0], vv0[1], ... , vv0[dim]*s, ..., vv0[n] ], [ vv1[0], vv1[1], ... , vv1[dim]*s, ..., vv1[n] ], ...]]
-// change 'dim' parameter to change the dimension of the element sets that gets multiplied
-
+/*
+  20150213 Given vector 'vv' in 1 dimensions whose elements are vectors,
+               scalar 's' and
+               dimension target 'dim',
+               return new vvector = [ [ vv0[0], vv0[1], ... , vv0[dim]*s, ..., vv0[n] ], [ vv1[0], vv1[1], ... , vv1[dim]*s, ..., vv1[n] ], ...]]
+ change 'dim' parameter to change the dimension of the element sets that gets multiplied
+*/
 function scalar_dim_mult(vv, s, dim=0, modvv=[], index=0) = (index<len(vv)) ? scalar_dim_mult(vv, s, dim, concat(modvv, [scalar_ele_mult(vv[index],s=s, ele=dim)] ), index+1 )
                                                                             : modvv;
 /*
@@ -112,9 +162,10 @@ echo(str("testscalvec2 ", testscalvec2, " scalar_dim_mult(testscalvec2, 4.2, 1):
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150213 multiply a single element 'ele' of a 1d vector 'v' by a scalar 's'
-// change 'ele' parameter to change which element in the vector gets multiplied
-// if given a ele > len(v), this will just return original vector v
+/*20150213 multiply a single element 'ele' of a 1d vector 'v' by a scalar 's'
+change 'ele' parameter to change which element in the vector gets multiplied
+ if given a ele > len(v), this will just return original vector v
+*/
 function scalar_ele_mult(v, s=1, ele=0, modv=[], index=0) = (index<len(v))? scalar_ele_mult(v,s,ele, concat(modv, (index==ele)? unpackElement(v,index)*s /*we're at the right element and at an index inside the bounds of v so change it w/ concat*/
                                                                                                                               : unpackElement(v,index)), index+1)
                                                                         : modv;//we're beyond the bounds of v, so release the new vector
@@ -145,9 +196,11 @@ echo(ff(2));
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150225 given a unidimensional vector 'v', and angle 'theta' and a scalar 'n' < len(v),
-//return a vector 'w' whose element n is congruent to corresponding element of v[n] *sin(theta),
-//and elements at indices =/= n congruent to v[n]
+/*
+20150225 given a unidimensional vector 'v', and angle 'theta' and a scalar 'n' < len(v),
+return a vector 'w' whose element n is congruent to corresponding element of v[n] *sin(theta),
+and elements at indices =/= n congruent to v[n]
+*/
 function sin_dim(v, theta=0, n=0, w=[], index=0) = (index<len(v)) ? sin_dim(v, theta, n, (index==n) ? concat(w, [v[index]*sin(theta)])
                                                                                                     : concat(w, [v[index]]), index+1)
                                                                   : w;
@@ -160,7 +213,11 @@ echo(str("sin_dim_test_vec: ", sin_dim_test_vec, "sin_dim(sin_dim_test_vec, 45, 
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150210 return the value in vector 'v' whose index corresponds to len(v) - 'n+1', so 0 neg index is the last value in a vector
+/*
+ 20150210 return the value in vector 'v'
+ whose index corresponds to len(v) - 'n+1',
+ so 0 neg index is the last value in a vector
+*/
 function negInd(v, n) = ( (abs(n)<len(v)) && (len(v)>0)) ? unpackElement(v,len(v)-abs(n+1))
                                                          : "ERROR negInd(v, n) : vector parameter 'v' should contain at least one item / AND   (abs(n)) < len(v)"; //return value at len-n index, accepts negative or positive n
 /*
@@ -181,10 +238,12 @@ echo(str( "2d test vector: ", testvec2d, " --> firstLastSwap(testvec2d): ", firs
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150211 return a vector the same as input 'v' but with values from 'index' to len(v)-index in reverse sequence...sweep through half of the values,
-//concatenating reversed first and last values of center-index-aligned subsets of original vector set
-//like a tasty sandwich with a filler of the next smallest set of the same
-//20150213 updated for multidimensional arrays using unpackElement(v,n)
+/*
+20150211 return a vector the same as input 'v' but with values from 'index' to len(v)-index in reverse sequence...sweep through half of the values,
+concatenating reversed first and last values of center-index-aligned subsets of original vector set
+like a tasty sandwich with a filler of the next smallest set of the same
+20150213 updated for multidimensional arrays using unpackElement(v,n)
+*/
 function reverse(v, index=0, subv=[]) = (index < (len(v)/2-1)) ? concat( (index==0)?unpackElement(firstLastSwap(v),0) /*CONCAT -> if this is the first element of v, replace it with the last element of v using first-last swap result*/
                                                                                    :unpackElement(firstLastSwap(subv),0) , reverse(v, index+1, (index==0) ? chopEnds(v) /*if not first element of v, use last element of subset, then CONCAT-> reverse subset recursively, using original v on first (index==0) step */
                                                                                                                                                           :chopEnds(subv)) ,  (index==0) ? negInd(firstLastSwap(v),0) /*use original on first step */
@@ -193,9 +252,11 @@ function reverse(v, index=0, subv=[]) = (index < (len(v)/2-1)) ? concat( (index=
 
 
 ///////////////////////////////////////////////////////////////////
-//20150226 Given a unidimensional vector 'v' with vector elements, return new vector 'w'
-//whose vector elements are congruent to the reverse-ordered result of the corresponding
-//element in the original v
+/*
+20150226 Given a unidimensional vector 'v' with vector elements, return new vector 'w'
+whose vector elements are congruent to the reverse-ordered result of the corresponding
+element in the original v,
+*/
 function reverseElem(v, index=0, w=[]) = (index<len(v)) ? reverseElem(v, index+1, concat(w, [reverse(unpackElement(v, index)[0])]))
                                                      : w;
 
@@ -219,7 +280,10 @@ echo(str( "test vector: ", testRevVec3, " --> reverse(testRevVec3): ", reverse(t
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150211 return a vector composed of the original input vector 'v' concatenated with a vector corresponding to v reversed (reverse(v))
+/*
+20150211 return a vector composed of the original input vector 'v'
+concatenated with a vector corresponding to v reversed (reverse(v))
+*/
 function reflectvec(v) = concat(v, reverse(v));
 
 /*
@@ -230,7 +294,10 @@ echo(str( "test vector: ", testReflectVec, " --> refletvec(testRefletvecVec): ",
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150222 return a vector corresponding to the original input vector 'vv' concatenated with reverse of vv times scalar multiplier
+/*
+20150222 return a vector corresponding to the original input vector 'vv'
+concatenated with reverse of vv times scalar multiplier
+*/
 function reflectvec_scalar_dim_mult(vv, s, dim) = concat(vv, reverse(scalar_dim_mult(vv,s,dim)) );
 
 /*
@@ -242,9 +309,11 @@ testReflectVecscalarmult= [[0,0], [1,1], [2,2], [3,3], [4,4], [5,5], [6,6]];
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150211 return a vector corresponding to values of 'v' in original sequence except for the omission of values at index 0 and len(v)-1 (the first and last)
-//20150212 does not work with multidimensional vector
-//20150313 updated to work with multidimensional vector using unpackElement(v,n)
+/*
+20150211 return a vector corresponding to values of 'v' in original sequence except for the omission of values at index 0 and len(v)-1 (the first and last)
+20150212 does not work with multidimensional vector
+20150313 updated to work with multidimensional vector using unpackElement(v,n)
+*/
 function chopEnds(v, modv=[], index=1) = (len(v)<3) ? "ERROR  chopEnds(v, modv=[], index=1) : vector parameter 'v' should contain at least three items, i.e. len(v)>=3"
                                                     : (index<len(v)-1) ? chopEnds(v, concat(modv, unpackElement(v,index)), index+1)
                                                                        : modv;
@@ -261,8 +330,10 @@ echo(str( "test vector: ", testChopVec3, " --> chopEnds(testChopVec3): ", chopEn
 
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-//20150211 return vector with swapped first and last values....IF THERE ARE LESS THAN TWO values in 'v' then return v, else pick the first value, replace it with the last value, sweep through all values and place the original first value last
-//20150513 updated to work with vector that might have 2d  elements using unpackElement
+/*
+20150211 return vector with swapped first and last values....IF THERE ARE LESS THAN TWO values in 'v' then return v, else pick the first value, replace it with the last value, sweep through all values and place the original first value last
+20150513 updated to work with vector that might have 2d  elements using unpackElement
+*/
 function firstLastSwap(v, modv=[], index=0, first="") = (len(v)<=1) ? v
                                                                     : (index<(len(v)-1)) ? firstLastSwap(v, concat(modv, (index==0) ? negInd(v,0)
                                                                                                                                     :  unpackElement(v,index)), index+1, (index==0) ? unpackElement(v,index)
@@ -303,22 +374,24 @@ for(n = [0:len(v)-1]){
 // Element Manipulation 20150225
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-// 20150225  This is a TEMPLATE function, which means you should copypasta it
-//           and redefine as needed. For this to work properly, please be certain
-//           to be careful with what you name the copies so you avoid conflicts
-//           When using with a vector comprised of vector elements, take care to
-//           adapt the function called by the template appropriately
-//
-//           REMEMBER TO CHANGE the funcTemplate name in BOTH PLACES and to change the
-//                              func name in BOTH PLACES
-//           You can also inline the func within the funcTemplate
-//
-//Given a unidimensional vector 'v', a scalar 'n' within the indices of v,
-// and a SEPARATELY DEFINED function 'func', return a vector 'w' whose elements
-// satisfy the following: w[m] = func(v[m]),  m=n
-//                        w[m] = v[m],        m=/=n
-//
-//
+/*
+20150225   This is a TEMPLATE function, which means you should copypasta it
+           and redefine as needed. For this to work properly, please be certain
+           to be careful with what you name the copies so you avoid conflicts
+           When using with a vector comprised of vector elements, take care to
+           adapt the function called by the template appropriately
+
+           REMEMBER TO CHANGE the funcTemplate name in BOTH PLACES and to change the
+                              func name in BOTH PLACES
+           You can also inline the func within the funcTemplate
+
+Given a unidimensional vector 'v', a scalar 'n' within the indices of v,
+ and a SEPARATELY DEFINED function 'func', return a vector 'w' whose elements
+ satisfy the following: w[m] = func(v[m]),  m=n
+                        w[m] = v[m],        m=/=n
+
+*/
+
 
 function func(element) = element/.618; //random
 function funcTemplate(v, n, index=0, w=[]) = (index<len(v)) ? funcTemplate(v, n, index+1, (index==n) ? concat(w, func(unpackElement(v,index)))
@@ -353,7 +426,7 @@ echo(str("template_test_vec3 = ", template_test_vec3, len(template_test_vec3), "
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-///Fibonacci Sequence 20150208
+//Fibonacci Sequence 20150208
 ///////////////////////////////////////////////////////////////////
 function f(ab,n) = (n>1) ? f(concat(ab, sumfinalpair(ab)), n-1 )
                          : concat(ab, sumfinalpair(ab)); // additive fibonacci sequence: given an m-dimensional vector "ab", return an extension of ab into "n" additional dimensions using values satisfying the rule ( _ = subscript): x_{n} = x_{n-1} + x_{n-2}
@@ -368,7 +441,6 @@ echo(result);
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
 //Generate Degenerate (Rectangular) Spiral
-//function f_corners(radii, n=0, corners=[], rotation=90) = (n < len(radii)) ? f_corners(radii, ++n, concat(corners, [[ radii[n]*cos(rotation*(n-2)), radii[n]*sin(rotation*(n-2)) ]] ), rotation) : corners;
 function f_corners(radii, start=270, rotation=-90, n=3, corners=[[0,0],[0,0],[0,0]]) = (n < len(radii)) ? f_corners(radii, start+rotation, rotation, n+1, concat(corners, [newcorner(corners[n-1], radii[n-2], start)])) : corners;
 function newcorner(vv, r, theta) = len(vv)>=2? [ vv[0] + r*cos(theta), vv[1] + r*sin(theta)] : "ERROR newcorner(vv,r,theta) : vector parameter 'vv'  should be ordered pair in 2 dimensions ";
 /*
@@ -406,6 +478,19 @@ echo(str("newcorner result ", newcorner_result)); //20150210 ECHO: "newcorner re
                           Moon Betwixt My Firmaments,
                         Lightfooted Love of My Long Lost Lagrange Loci,
                         for Here Follows a Veritable Litany of Misdeed:
+*/
+
+
+/*
+
+
+WHY SO COMPLICATED?
+
+function arithmetic(s=0, i=-1, n=8, v=[], index=0) = (index < n) ? (index==0) ? arithmetic(s, i, n, [s], index+1)
+                                                                         : arithmetic(s, i, n, concat(v, negInd(v,0)+i), index+1)
+                                                            : v;
+
+
 */
 
 
@@ -447,6 +532,8 @@ echo(str("test_func_dim_vec = ", test_func_dim_vec), "func_dim(test_func_dim_vec
 
 ////= len(radii) > 2 ? concat : "ERROR f_corners(radii) : vector 'radii' must contain at least two items"; //return corners of a degenerate spiral
 
+
+//function f_corners(radii, n=0, corners=[], rotation=90) = (n < len(radii)) ? f_corners(radii, ++n, concat(corners, [[ radii[n]*cos(rotation*(n-2)), radii[n]*sin(rotation*(n-2)) ]] ), rotation) : corners;
 
 //(len(vv)==undef) ? str("scalar_dim_mult(vv, s, dim, modv, index): vv should be a vector") /*is vv a vector*/
 //                                                                                                                           : ( (len(unpackElement(vv,index))==undef) || (len(unpackElement(vv,index))<dim)) ? str("scalar_dim_mult(vv,s,dim, modv, index) vv should have elements that are vectors whose lengths are at least dim") /*make sure there are enough elements in the current element of v*/
